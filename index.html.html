@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اختبار محاكي — English</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+body{background:linear-gradient(135deg,#0f172a,#1e293b);min-height:100vh;color:#0f172a}
+.screen{max-width:860px;margin:0 auto;padding:20px}
+.hidden{display:none!important}
+/* ===== Home ===== */
+.hero{text-align:center;color:#fff;padding:40px 10px 20px}
+.hero .logo{font-size:60px}
+.hero h1{font-size:2rem;font-weight:900;margin:8px 0}
+.hero p{color:#94a3b8;font-size:1rem}
+.cards{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.card{background:#fff;border-radius:20px;padding:28px;width:300px;text-align:center;box-shadow:0 15px 40px rgba(0,0,0,.35);transition:.2s}
+.card:hover{transform:translateY(-6px)}
+.card .ic{font-size:44px}
+.card h2{margin:10px 0 4px;font-size:1.3rem}
+.card p{color:#64748b;font-size:.9rem;margin-bottom:18px}
+.btn{display:inline-block;border:none;cursor:pointer;border-radius:12px;padding:12px 26px;font-family:inherit;font-weight:700;font-size:1rem;transition:.15s}
+.btn-p{background:#0ea5e9;color:#fff}.btn-p:hover{background:#0284c7}
+.btn-g{background:#22c55e;color:#fff}.btn-g:hover{background:#16a34a}
+.btn-o{background:transparent;border:2px solid #cbd5e1;color:#334155}
+.btn-o:hover{border-color:#0ea5e9;color:#0ea5e9}
+.note{text-align:center;color:#94a3b8;font-size:.85rem;margin-top:26px}
+/* ===== Quiz ===== */
+.topbar{position:sticky;top:0;z-index:9;background:#0f172ae6;backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:0 0 16px 16px;flex-wrap:wrap}
+.topbar b{font-size:1rem}
+.chip{background:#1e293b;border:1px solid #334155;border-radius:99px;padding:5px 14px;font-size:.9rem;font-weight:700}
+.chip.warn{background:#7f1d1d;border-color:#ef4444;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.55}}
+.spacer{flex:1}
+.pbar{height:6px;background:#334155;border-radius:9px;margin:14px 2px;overflow:hidden}
+.pbar i{display:block;height:100%;background:#22c55e;width:0;transition:.3s}
+.qcard{background:#fff;border-radius:18px;padding:24px;margin-top:6px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.qnum{color:#0ea5e9;font-weight:900;font-size:.9rem;margin-bottom:8px}
+.qtext{direction:ltr;text-align:left;font-size:1.06rem;line-height:1.7;font-weight:600}
+.passage{direction:ltr;text-align:left;background:#f1f5f9;border-right:4px solid #0ea5e9;border-radius:10px;padding:14px;font-size:.92rem;line-height:1.7;margin-bottom:16px;color:#334155;max-height:260px;overflow:auto}
+.opts{margin-top:18px;display:flex;flex-direction:column;gap:10px;direction:ltr}
+.opt{display:flex;gap:10px;align-items:flex-start;border:2px solid #e2e8f0;border-radius:12px;padding:12px 14px;cursor:pointer;font-size:.98rem;transition:.12s;background:#fff;text-align:left}
+.opt:hover{border-color:#0ea5e9;background:#f0f9ff}
+.opt .L{font-weight:900;color:#0ea5e9;min-width:22px}
+.opt.sel{border-color:#0ea5e9;background:#e0f2fe}
+.opt.ok{border-color:#22c55e;background:#f0fdf4}
+.opt.bad{border-color:#ef4444;background:#fef2f2}
+.opt .mark{margin-right:auto;font-weight:900}
+.nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.pal{background:#fff;border-radius:14px;padding:14px;margin-top:14px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.pal h4{font-size:.85rem;color:#64748b;margin-bottom:8px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.pgrid button{border:2px solid #e2e8f0;background:#f8fafc;border-radius:8px;padding:6px 0;font-family:inherit;font-weight:700;cursor:pointer;font-size:.8rem}
+.pgrid button.ans{background:#22c55e;color:#fff;border-color:#22c55e}
+.pgrid button.cur{border-color:#0ea5e9;box-shadow:0 0 0 2px #bae6fd}
+/* ===== Result ===== */
+.res{background:#fff;border-radius:20px;padding:30px;text-align:center;box-shadow:0 12px 35px rgba(0,0,0,.35)}
+.ring{width:150px;height:150px;border-radius:50%;margin:10px auto;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-weight:900}
+.ring b{font-size:2.2rem}.ring span{font-size:.85rem}
+.rmsg{font-size:1.4rem;font-weight:900;margin:12px 0 4px}
+.rstats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+.stat{background:#f1f5f9;border-radius:12px;padding:10px 18px;font-size:.9rem}
+.stat b{display:block;font-size:1.25rem}
+.rev{background:#fff;border-radius:16px;padding:20px;margin-top:20px;box-shadow:0 8px 25px rgba(0,0,0,.3)}
+.rev h3{margin-bottom:14px;color:#0f172a}
+.rev .opt{cursor:default}
+@media(max-width:600px){.qcard{padding:16px}.card{width:100%}}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<div id="home" class="screen">
+  <div class="hero">
+    <div class="logo">📝</div>
+    <h1>اختبار محاكي للامتحان النهائي</h1>
+    <p>English Course — MCQ Exam Simulator • يُصحَّح تلقائيًا</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="ic">⚡</div>
+      <h2>النسخة القصيرة</h2>
+      <p>20 سؤال — 20 دقيقة</p>
+      <button class="btn btn-p" onclick="startExam(20)">ابدأ الاختبار</button>
+    </div>
+    <div class="card">
+      <div class="ic">🎯</div>
+      <h2>النسخة الكاملة</h2>
+      <p>50 سؤال + قطعة قراءة — 50 دقيقة</p>
+      <button class="btn btn-g" onclick="startExam(50)">ابدأ الاختبار</button>
+    </div>
+  </div>
+  <p class="note">⚠️ الأسئلة تُسحب عشوائيًا من بنك الأسئلة في كل محاولة، وترتيب الاختيارات يتغير — تمامًا كامتحان حقيقي.</p>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div id="quiz" class="screen hidden">
+  <div class="topbar">
+    <b id="exTitle"></b>
+    <span class="chip" id="timer">00:00</span>
+    <span class="chip" id="progTxt">0/0</span>
+    <span class="spacer"></span>
+    <button class="btn btn-g" onclick="tryFinish()">تسليم ✅</button>
+    <button class="btn btn-o" style="border-color:#475569;color:#e2e8f0" onclick="goHome()">خروج</button>
+  </div>
+  <div class="pbar"><i id="pfill"></i></div>
+  <div class="qcard" id="qcard"></div>
+  <div class="nav">
+    <button class="btn btn-o" id="prevBtn" onclick="move(-1)">→ السابق</button>
+    <button class="btn btn-p" id="nextBtn" onclick="move(1)">التالي ←</button>
+  </div>
+  <div class="pal"><h4>خريطة الأسئلة — اضغط على رقم السؤال للانتقال إليه</h4><div class="pgrid" id="pal"></div></div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<div id="result" class="screen hidden">
+  <div class="res" id="resTop"></div>
+  <div class="rev"><h3>📚 مراجعة الإجابات</h3><div id="review"></div></div>
+  <div style="display:flex;gap:12px;justify-content:center;margin:22px 0;flex-wrap:wrap">
+    <button class="btn btn-p" id="retryBtn">🔄 محاولة جديدة (أسئلة مختلفة)</button>
+    <button class="btn btn-o" style="background:#fff" onclick="goHome()">🏠 الرئيسية</button>
+  </div>
+</div>
+
+<script>
+/* ================= بنك الأسئلة ================= */
+const POOL=[
+{x:"The match was so <u><b>boring</b></u>. The word <b>boring</b> here is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"She lives in a recently constructed <b>building</b>. The word <b>building</b> here is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"There aren't ............ new shops in this area.",o:["any","some","much","little"],a:0},
+{x:"Avoid eating ............ sugar. It's not good for your health.",o:["any","few","many","much"],a:3},
+{x:"Would you like ............ tea?",o:["any","some","many","few"],a:1},
+{x:"Mike was so important for me when I was in college. I really ........ him.",o:["hate","miss","lose","believe"],a:1},
+{x:"We stress ............ in a sentence.",o:["all nouns","all words that convey meaning, feelings, and attitudes","all prepositions and articles","all words and expressions"],a:1},
+{x:"When we write contractions, we ............ letters.",o:["replace","add","drop","change"],a:2},
+{x:"Life here seems ............ because I have nothing to do in my free time, and I'm away from my friends and family.",o:["expensive","interesting","exciting","boring"],a:3},
+{x:"Do you like to study alone or in a ............?",o:["department","dorm","study group","social life"],a:2},
+{x:"Perhaps we could see a movie. — The above sentence is used to ............",o:["show agreement","show disagreement","express opinion","make a suggestion"],a:3},
+{x:"I see your point, but the price is too high for me. — The above sentence is used to ............",o:["show agreement","show disagreement","apologize for a mistake","make a suggestion"],a:1},
+{x:"What about visiting the zoo? — The above sentence is used to ............",o:["show agreement","show disagreement","apologize for a mistake","make a suggestion"],a:3},
+{x:"The word <b>garden</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"The word <b>quiet</b> is a/an ............",o:["verb","noun","preposition","adjective"],a:3},
+{x:"The word <b>convenient</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:3},
+{x:"The word <b>traffic</b> is a/an ............",o:["preposition","noun","adverb","adjective"],a:1},
+{x:"Students can go to the college administration office if they want to ............",o:["ask about fees","buy or borrow a new book","find a study group","choose a roommate"],a:0},
+{x:"My campus is smaller than my brother's campus. — The above sentence has a/an ............ form",o:["negative","interrogative","comparative","superlative"],a:2},
+{x:"Compared to world prices, this car is not at all expensive. — The above sentence has a/an ............ form",o:["negative","interrogative","comparative","superlative"],a:2},
+{x:"If a campus is so small, it may be more boring than a big one. — The above sentence has a/an ............ form",o:["negative","interrogative","comparative","superlative"],a:2},
+{x:"The comparative form of the adjective <b>noisy</b> is ............",o:["noise","noisyer","noiser","noisier"],a:3},
+{x:"In online shopping, you ............ try on the items you buy.",o:["can","can't","may","should"],a:1},
+{x:"In online shopping, you ............ look for parking.",o:["can","need to","don't need to","should"],a:2},
+{x:"A lot of people are shopping here. This place is so ............",o:["expensive","cheap","dark","crowded"],a:3},
+{x:"Since we have no money, let's just ............ We can buy what we want later.",o:["save","browse","purchase","consume"],a:1},
+{x:"— How are you doing, Lizzy? — ............",o:["I'm doing my homework.","I've just found a new job.","I'm using my sister's tools.","Pretty good"],a:3},
+{x:"It was nice meeting you. — When would you say this sentence?",o:["When you meet someone for the first time.","When you meet a friend.","When you leave someone.","When you introduce yourself to someone."],a:2},
+{x:"We are <b>going to</b> go swimming. In reduced form, the underlined part becomes ............",o:["gonna","gonna to","go to","going"],a:0},
+{x:"It's nice to <b>meet you</b>. In reduced form, the underlined part becomes ............",o:["meeya","meetya","meeta","meetchya"],a:1},
+{x:"If you don't like the item you bought, it's possible to get your money refunded. This means that ............",o:["you give back the item and get back your money","you replace the item you bought with another item","you keep the item and save half of the money you paid","you return the item, but lose half of the money you paid"],a:0},
+{x:'If "no returns allowed," it means that ............',o:["you can give back the item and get back your money","you cannot give back the item, and you cannot get back your money","you can keep the item and save half of the money you paid","you are allowed to return the item, but you lose half of the money you paid"],a:1},
+{x:"If the item is too small, it means that ............",o:["it is the wrong size","it is the right size","it is very cheap","it doesn't work"],a:0},
+{x:"I need to buy a mobile <b>cover</b>. The underlined word is a/an ............",o:["verb","noun","adverb","adjective"],a:1},
+{x:"Do you know how much a smart <b>watch</b> costs? The underlined word is a/an ............",o:["verb","noun","adverb","adjective"],a:1},
+{x:"Did you <b>post</b> anything on Facebook last night? The underlined word is a/an ............",o:["verb","noun","adverb","adjective"],a:0},
+{x:"The word <b>amazing</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:3},
+{x:"To <b>keep in touch</b> means to ............",o:["continue touching","go on playing","stay in contact","stay beside someone"],a:2},
+{x:"If you are nearby, please ............ I'm completely free and available all day.",o:["call back","come by","run into","call out"],a:1},
+{x:"The word <b>casual</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:3},
+{x:"The word <b>formal</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:3},
+{x:"The word <b>friendly</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:3},
+{x:"The word <b>heavily</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:2},
+{x:"I can carry the bag alone. It's quite <b>light</b>. — The opposite of <b>light</b> here is ............",o:["dark","heavy","strong","clean"],a:1},
+{x:"It's so cold today. Why are you wearing ............ clothes?",o:["light","heavy","dark","dirty"],a:0},
+{x:"Although she is not ............ at all, she insists on reducing the amount of food she eats everyday.",o:["tall","thin","fat","sick"],a:2},
+{x:"— Where is the post office? — Just turn <b>right</b>. — The opposite of the word <b>right</b> here is ............",o:["left","wrong","correct","full"],a:0},
+{x:"— Should I go straight till the end? — That's <b>right</b>. — The opposite of the word <b>right</b> here is ............",o:["left","wrong","correct","full"],a:1},
+{x:"The opposite of the word <b>perfect</b> is ............",o:["imperfect","unperfect","disperfect","nonperfect"],a:0},
+{x:"The opposite of the word <b>friendly</b> is ............",o:["friendlyless","disfriendly","unfriendly","infriendly"],a:2},
+{x:"Sara is a medium-............ girl.",o:["size","sized","sizing","site"],a:1},
+{x:"Hello, my name's Thomas. — When would you say the sentence above?",o:["When I introduce myself","When I am about to leave someone","When I introduce my friend to someone else","When I start an important topic"],a:0},
+{x:"Can I call you back? — When would you ask the question above?",o:["When I end a conversation","When I start a conversation","When I introduce my friend to someone else","When I apologize for a mistake"],a:0},
+{x:"How's it going? — When would you ask the question above?",o:["When I end a conversation","When I start a conversation","When I introduce my friend to someone else","When I apologize for a mistake"],a:1},
+{x:"Intercultural communication involves ............",o:["people who speak the same language","people who have the same cultural views","people from different cultures","people from different parts of the same country"],a:2},
+{x:"The word <b>square</b> is used to describe ............",o:["hair","facial hair","mouth","face"],a:3},
+{x:"The word <b>oval</b> is used to describe ............",o:["hair","facial hair","mouth","face"],a:3},
+{x:"The word <b>curly</b> is used to describe ............",o:["hair","facial hair","mouth","face"],a:0},
+{x:"The word <b>round</b> is used to describe ............",o:["hair","facial hair","mouth","face"],a:3},
+{x:"The word <b>gender</b> refers to ............",o:["where someone comes from","whether someone is male or female","how old someone is","someone's general views"],a:1},
+{x:"The word <b>pharmacist</b> refers to ............",o:["one's gender","place","one's profession","a science"],a:2},
+{x:"The word <b>emergency</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:1},
+{x:"The word <b>infect</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:0},
+{x:"If you are sick, the doctor will ask you about your ............ so that he can form an idea about what problem you suffer from.",o:["symptoms","diagnosis","aspects","preferences"],a:0},
+{x:"Emergency refers to ............",o:["symptoms of an illness","a problem with someone","a serious condition happening suddenly","someone who visits you without previous arrangement"],a:2},
+{x:"<b>Would you</b> like some tea? — The reduced form from the underlined part is ............",o:["Wudya","Wudja","Would ya","Dia"],a:1},
+{x:"<b>Could you</b> come with us? — The reduced form from the underlined part is ............",o:["Cudya","Cudja","Could ya","Cia"],a:1},
+{x:"No — <b>Just your</b> ID and insurance card. — The reduced form from the underlined part is ............",o:["Jusyer","Jucher","Justcher","Juster"],a:0},
+{x:"If no one answers your call, just ............ and call back later.",o:["press","hang up","try","stop"],a:1},
+{x:"If you need Customer Service, please ............ button number 1 on your phone.",o:["press","hang up","stress","catch"],a:0},
+{x:"The word <b>member</b> is a/an ............",o:["verb","noun","adverb","adjective"],a:1},
+{x:"An <b>intramural match</b> is a match between ............",o:["two teams from the same institution","two teams from two different institutions","two brothers and two sisters","two teams from two different countries"],a:0},
+{x:"How <b>did you</b> make connections at the local school? — The reduced form of the underlined part is ............",o:["ja","ya","cha","youa"],a:2},
+{x:"A— Are you all from this country? B— No, we come from ............",o:["this country","this town","around the world","here"],a:2},
+{x:"This class is so difficult. I think I'm going to <b>drop</b> it. — The underlined word means ............",o:["get rid of","cause something to fall down","pass","stop attending"],a:3},
+{x:"If you are free tonight, why don't you <b>hang out</b> with me and my friends? — The underlined word means ............",o:["spend time together","work without pay","go shopping","stop attending a class"],a:0},
+{x:"If you have free time, you may <b>volunteer</b> at a local community center. — The underlined word means ............",o:["spend time together","work without pay","learn","attend"],a:1},
+{x:"A— Why is she so <b>upset</b>? B— Because she couldn't pass her final exam. — The underlined word means ............",o:["nervous","sad and worried","pleased","optimistic"],a:1},
+{x:"This <b>semester</b> I have two classes early in the morning. — The underlined word means ............",o:["a college term of classes","a couple of weeks","same month","location on campus"],a:0},
+{x:"I'm trying to <b>find out</b> the cause of his absence. — The underlined word means ............",o:["reach","explain","discover","run out"],a:2},
+{x:"My dad always <b>takes us to dinner</b> in a nice restaurant. — The underlined part means ............",o:["cook a meal for someone","pay for a meal","buy food for someone","deliver food for someone"],a:1},
+{x:"When you succeed, I'll buy you a graduation <b>present</b>. — The underlined part means ............",o:["gift","presentation","certificate","party"],a:0},
+{x:"I'm <b>glad</b> you come to my birthday party. — The underlined part means ............",o:["sad","anxious","surprised","happy"],a:3},
+{x:"A naming ceremony is ............",o:["a wedding event","a ceremony for a new baby","a birthday party","a graduation ceremony"],a:1},
+{x:"A graduation party is held ............",o:["after receiving a scientific degree","at the end of each academic year","before travelling to a foreign country","when starting a new project or job"],a:0},
+{x:"A fundraiser is ............",o:["an event to celebrate a new baby","an event to collect money to support a charity or an organisation","to establish a new company","a birthday party"],a:1},
+{x:"To accept means to ............",o:["refuse","marry","wear new clothes","agree"],a:3},
+{x:"To dress up means to ............",o:["wear formal clothes","marry","wear new clothes","hang out"],a:0},
+{x:'"Congratulations" means ............',o:["a wish of joy","formal invitation","thanking someone","apologizing"],a:0},
+{x:'"An office party" means ............',o:["a celebration at a place of work","a yearly celebration of an important event","a yearly present","wish of joy"],a:0},
+{x:"Would you like to come? — This sentence is most probably said when ............",o:["accepting an invitation","thanking someone for inviting you","inviting someone","refusing an invitation"],a:2},
+{x:"Can you join us? — This sentence is most probably said when ............",o:["accepting an invitation","thanking someone for inviting you","inviting someone","refusing an invitation"],a:2},
+{x:"Are you free? — This sentence is most probably said when ............",o:["accepting an invitation","thanking someone for inviting you","inviting someone","refusing an invitation"],a:2},
+{x:"A— ............ B— Oh! Congratulations! Who's the lucky man?",o:["My parents and I would like to invite you to my wedding party.","How about coming to the concert with me?","I'd like to invite you to my brother's birthday party.","I'd like to invite you to my brother's graduation party."],a:0},
+{x:'To "turn down" means to ............',o:["agree","accept","refuse","wear formal clothes"],a:2},
+{x:"A— Nice to meet you. B— ............",o:["See you soon","Nice to meet you, too.","Many thanks","Oh! I'm so sorry."],a:1},
+{x:"The word <b>different</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"The word <b>several</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"The word <b>wonderful</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"The word <b>helpless</b> is a/an ............",o:["verb","noun","adjective","verb and noun"],a:2},
+{x:"............ is the number of people in a city or country.",o:["Population","Pollution","Campus","Dormitory"],a:0},
+{x:"............ is the land and buildings of a college.",o:["Population","Campus","University","Dormitory"],a:1},
+{x:"............ is an apartment building for students.",o:["Population","Campus","University","Dormitory"],a:3},
+{x:"A ............ is the place or shop that sells pizza.",o:["pizza parlor","pizza campus","pizza location","pizza dorm"],a:0},
+{x:"If a student has a problem with his/her laptop, he/she can go to ............",o:["students' affairs","tech-support center","pizza parlor","the dorm"],a:1},
+{x:"There is often a <b>shuttle</b> for students. — The underlined word means ............",o:["a bus that takes students from one place on campus to another.","a tech-support center","a bus that takes students from one place in town to another.","the dorm"],a:0},
+{x:"There are five <b>characteristics</b> of a good teacher. — The underlined word means ............",o:["personalities","qualities","jobs","skills"],a:1},
+{x:"Successful students ............ text during class.",o:["should","may","should not","can"],a:2},
+{x:"Successful students <b>constantly</b> review the lessons they take in class. — The underlined word means ............",o:["rarely","sometimes","never","continuously"],a:3},
+{x:"Another word meaning <b>however</b> is ............",o:["yet","in addition","also","hence"],a:0},
+{x:"Another word meaning <b>may</b> is ............",o:["yet","perhaps","also","surely"],a:1},
+{x:"Students go to college ............ an education.",o:["with","in","for","through"],a:2},
+{x:"A bus takes you ............ one part of the city to another.",o:["with","in","for","from"],a:3},
+{x:"Your teacher can help you ............ these questions.",o:["with","through","from","on"],a:0},
+{x:"Try to take part ............ class discussions.",o:["with","through","from","in"],a:3},
+{x:"Learning happens ............ many places.",o:["at","on","from","in"],a:0},
+{x:"The word <b>shuttle</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"............ means to make your body work.",o:["exercise","gallery","assignment","class"],a:0},
+{x:"............ is where you can see art.",o:["gallery","dorm","transportation","discussion"],a:0},
+{x:"............ means not old-fashioned.",o:["gallery","modern","shuttle","discussion"],a:1},
+{x:"............ means get ready.",o:["discuss","complete","prepare","do assignments"],a:2},
+{x:"Love, Dad — The above part is written ............ of an email.",o:["at the beginning","at the end","in the middle","in the introduction"],a:1},
+{x:"An email should end with a/an ............",o:["greeting","introduction","signature","closing statement"],a:2},
+{x:"When writing an email, the function of the closing paragraph is to ............",o:["greet the other person","introduce the main topic","sign the email","summarize the email and end with a friendly comment"],a:3},
+{x:"The word garage is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"The word prediction is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"They sell products in many <b>categories</b>. — The underlined word means ............",o:["countries","different colors","different sizes","groups of similar things"],a:3},
+{x:"Home improvement products are things that we use to ............",o:["arrange things in a house","sell a house","fix up a house","decorate a house"],a:2},
+{x:"E-commerce refers to ............",o:["commerce in big markets","selling and buying things at home","finding a new job","buying and selling on the Internet"],a:3},
+{x:'The past from the verb "bring" is ............',o:["brought","bought","brang","bringed"],a:0},
+{x:"The past form from the verb <b>drive</b> is ............",o:["will drive","driven","droven","drove"],a:3},
+{x:"The past form from the verb <b>sell</b> is ............",o:["will sell","sold","selled","saled"],a:1},
+{x:"The past form from the verb <b>think</b> is ............",o:["will think","thinked","thought","thinking"],a:2},
+{x:"The future form from the verb <b>spend</b> is ............",o:["will spend","spent","spending","spends"],a:0},
+{x:"Many years ago, only scientists ............ how to use the Internet.",o:["predicted","knew","spent","avoided"],a:1},
+{x:"He ............ his job and searched for another one because it was so tiring for him.",o:["predicted","spent","left","avoided"],a:2},
+{x:"I bought a car for $10,000 and sold it for $11,000, so I made a ............ of $1000.",o:["sale","gain","profit","benefit"],a:2},
+{x:"I found an apartment ............ rent. It's only $10 a day.",o:["for","at","in","with"],a:0},
+{x:"You'll not find anything new here. This shop only sells ............ goods.",o:["cheap","hand-made","secondhand","old-fashioned"],a:2},
+{x:"A paragraph is about one main ............",o:["sentence","topic","person","conclusion"],a:1},
+{x:"There are three reasons for the spread of pollution. — The topic here is ............",o:["pollution","reasons for the spread of pollution","three reasons","how to get rid of pollution"],a:1},
+{x:"Naguib Mahfouz is a great writer whose novels contain several social themes. — The topic here is ............",o:["social themes","Naguib Mahfouz","a great writer","novels"],a:1},
+{x:"Naguib Mahfouz is a great writer whose novels contain several social themes. — The main idea here is ............",o:["social themes","Naguib Mahfouz","a great writer","novels"],a:2},
+{x:"A summary ............ small details.",o:["has","should have","does not have","may have"],a:2},
+{x:"A summary should contain ............ of a paragraph or article.",o:["the main information and the most important details.","the main information","important details","small details"],a:0},
+{x:"This is a free meal. The word <b>free</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"The word <b>advertisement</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"You can <b>post</b> a comment on my Facebook page if you like. — The underlined word is a/an ............",o:["verb","noun","adjective","adverb"],a:0},
+{x:"Did you see my <b>post</b> on Facebook last night? — The underlined word is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:"University life is different from school life in many ways. — The main topic here is ............",o:["University","University life","how university life is different from school life","school life"],a:2},
+{x:"University life is different from school life in many ways. — The main idea here is ............",o:["University","University life","how university life is different from school life","school life"],a:2},
+{x:"To give up smoking, a smoker should follow certain steps. — The main idea here is ............",o:["smoking","the dangers of smoking","giving up smoking","steps of giving up smoking"],a:3},
+{x:"An essay should have ............",o:["a main idea","a main topic","a main idea and topic","several main ideas and topics"],a:0},
+{x:"You can post your essay on your blog ............",o:["before editing it","while editing it","after editing it","before or after editing it"],a:2},
+{x:"To write an essay or blog, the first step is ............",o:["writing the essay","brainstorming ideas","editing the essay","revising the essay"],a:1},
+{x:"The word <b>shy</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"Social-networking sites refer to ............",o:["physical locations like a cafe where you sit and chat with your friends.","learning places like schools","sites like Facebook and Instagram","street sites where some people work"],a:2},
+{x:"Shy persons find it ............ to deal with people.",o:["easy","difficult","boring","useless"],a:1},
+{x:"............ are persons with a lot of information about a subject.",o:["Teenagers","Workers","Experts","Businessmen"],a:2},
+{x:"Did you see my keys? I searched in many places, but I didn't find <b>them</b> anywhere. — The underlined pronoun refers to ............",o:["keys","places","searching","anywhere"],a:0},
+{x:"The word <b>find</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:0},
+{x:"The word <b>suddenly</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:3},
+{x:"To <b>rescue</b> someone means that they are ............",o:["in peace","resting","in danger","in the sea"],a:2},
+{x:"An <b>emergency</b> often involves a state of ............",o:["comfort","pollution","danger","peace"],a:2},
+{x:"The opposite of the word <b>remote</b> is ............",o:["far away","cheap","dangerous","near"],a:3},
+{x:"The word <b>chronic</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:2},
+{x:"The word <b>wrinkles</b> is a/an ............",o:["verb","noun","adjective","adverb"],a:1},
+{x:'The word "often" is a/an ............',o:["noun","verb","adjective","adverb"],a:3},
+{x:"Exercise is good ............ physical and mental health.",o:["for","to","at","by"],a:0},
+{x:"Coffee and tea are kinds of ............",o:["superfood","beverages","wrinkles","donuts"],a:1},
+{x:"............ is/are not good for physical and mental health.",o:["Spending time with friends.","Sports","Sleep","Long working hours"],a:3},
+{x:'The adjective from the word "health" is ............',o:["healthy","healthly","healthing","healthily"],a:0},
+{x:"If a person is very smart (has a good brain), he/she is ............",o:["braining","brainy","brained","brainly"],a:1},
+{x:"If a person needs sleep, he/she is ............",o:["sleeping","asleep","slept","sleepy"],a:3},
+{x:"If something has a lot of dirt, it is ............",o:["dirty","dirting","dirtless","dirtly"],a:0},
+{x:'The adjective from "ice" is ............',o:["icing","iceless","icy","icily"],a:2},
+{x:"In the past, not everyone has ............ to doctors.",o:["remedy","ticket","cure","access"],a:3},
+{x:"When people have a cold, they get a ............",o:["stuffy nose","heart attack","sunburn","tan"],a:0},
+{x:"First-degree burns ............ be treated at home.",o:["should","must","can","should not"],a:2},
+{x:"Humidity refers to ............",o:["water in the air","stuffy nose","heart problem","home remedies"],a:0},
+{x:"The part of the body where the heart is located is ............",o:["mouth","liver","lung","chest"],a:3},
+{x:"The part of the body in between the neck and the arm is ............",o:["elbow","knee","ankle","shoulder"],a:3},
+{x:"You shouldn't drink too much coffee. — The above sentence is one way of ............",o:["giving advice","showing obligation","giving directions","giving permission"],a:0},
+{x:"A closed questionnaire ............",o:["allows a person to give any answer of his/her own","provides a number of choices from which a person must choose the answer","allows a person to add new information","provides hints to the correct answer"],a:1},
+{x:"When you first draft and edit your questionnaire, you ............",o:["should correct the mistakes you find","should not worry about mistakes","should rewrite the questionnaire","should ask someone to help you to edit it"],a:1},
+{x:'The word "directly" is a/an ............',o:["verb","noun","adjective","adverb"],a:3},
+{x:'They are not "equal" in size. — The underlined word is a/an ............',o:["verb","noun","adjective","adverb"],a:2},
+{x:'She told me a "funny" story about her visit to London. — The underlined word is a/an ............',o:["verb","noun","adjective","adverb"],a:2},
+{x:'Although the two "genders" are equal in many things, women are better in bringing up children. — The underlined word means ............',o:["all women","all men","men and women","the majority of men"],a:2},
+{x:'Women nowadays want to have a high position in the "hierarchy." — The underlined word means ............',o:["the system from below to high positions","all the fields in the country","higher positions","the majority of positions"],a:0},
+{x:'The word "similar" means ............',o:["exactly the same","identical","almost the same","different"],a:2},
+{x:"Which of the following phrases recognizes the conclusion of an article or essay?",o:["In addition","For example","In brief,","On the other hand"],a:2},
+{x:'A gender-neutral word for "salesman" is ............',o:["salesperson","saleswoman","actor","parent"],a:0},
+{x:'A gender-neutral word for "chairman" is ............',o:["chairwoman","chair or chairperson","spouse","salesperson"],a:1},
+{x:'A gender-neutral word for "headmaster" is ............',o:["headmistress","chairman","principal","salesperson"],a:2},
+{x:'A gender-neutral word for "mother" is ............',o:["father","spouse","principal","parent"],a:3},
+{x:"A good summary of an article or essay should contain ............",o:["examples and details","main ideas and important details","new details","new examples"],a:1},
+{x:"In short, it is very obvious that global warming has led to devastating effects. — The above sentence is most probably ............",o:["a conclusion in a paragraph or essay","a sentence in the introduction paragraph","a supporting detail","a new example"],a:0},
+{x:"The word <b>straight</b> is used to describe ............",o:["hair","facial hair","mouth","face"],a:0},
+{x:"A small area of a town or city is ............",o:["neighborhood","dormitory","population","gallery"],a:0},
+{x:"My name is Rafael Vasquez. I'm .... Colombia.",o:["at","on","from","in"],a:2},
+{x:"I live .... Fulton Street.",o:["in","on","from","at"],a:1},
+{x:"Wei and I are students here ... San Francisco.",o:["at","in","on","from"],a:1},
+{x:"We take English classes ... the college.",o:["on","from","in","at"],a:3},
+{x:"People who buy things are ............",o:["customers","gourmet","product","site"],a:0},
+{x:"My son is going to be 20 years old next week; he won't be a(n) ............ anymore.",o:["avalanche","teenager","shy","suddenly"],a:1},
+{x:"One of the ............ of hiking is that you get good exercise!",o:["pros","cons","disadvantages","public"],a:0},
+{x:"We wanted to go skiing, but there was a(n) ............ last night; it's too dangerous now.",o:["public","teenager","avalanche","suddenly"],a:2},
+{x:"Don't worry. The exam is pretty easy. — The word <b>pretty</b> here means ............",o:["quiet","quite","beautiful","clearly"],a:1},
+{x:"I'm a little ............ I feel worried because this is the first time to travel abroad.",o:["quiet","excited","nervous","busy"],a:2},
+{x:"I'm really ............ about my classes. They are very interesting and the professors are friendly.",o:["normal","worried","nervous","excited"],a:3},
+{x:"There are many things to do on campus. There are a lot of ............ like sports.",o:["activities","needs","games","lessons"],a:0},
+{x:"The adjective <b>urban</b> means relating to the ............",o:["city","village","factories","sea"],a:0},
+{x:"............ are university buildings where students can live.",o:["Towns","Dorms","Student unions","Departments"],a:1}
+];
+
+/* ===== قطعة القراءة (تظهر في النسخة الكاملة فقط) ===== */
+const PASSAGE={
+text:"Staying connected with friends and family today is easy. Thanks to the Internet, connecting with people using smartphones, tablets, or other devices is easy and fun. Billions of people around the world use Facebook, Instagram, Twitter, WhatsApp, and other social-networking sites and apps to keep in touch. Social networking has both pros and cons. You can use it to connect with people outside your neighborhood, anywhere in the world. Also, shy people (who have difficulty communicating in person) are often comfortable in a virtual friendship. But social networking can be bad for friendships, too. Some people spend a lot of time online. They have virtual friendships, but they don't spend much face-to-face time with friends. Also, for several reasons, social networking can be dangerous. First, you don't always know the real identity of other people. Second, information about you on a social-networking site is public. With another person's identity, they can steal money or get a passport, for example.",
+qs:[
+{x:'What does the pronoun "it" in "You can use it to connect with people" refer to?',o:["neighborhood","world","social networking","family"],a:2},
+{x:"According to the passage, shy people ............ with others.",o:["communicate easily","find it interesting to communicate","refuse to communicate","find it difficult to communicate"],a:0},
+{x:"The opposite of communicating online is communicating ............",o:["in person","virtually","on Facebook","using WhatsApp"],a:0},
+{x:"All of the following are mentioned as social-networking sites EXCEPT ............",o:["Twitter","Telegram","Facebook","Instagram"],a:1}
+]};
+
+/* ================= المنطق ================= */
+let S={items:[],idx:0,timer:null,end:0,total:0,mins:0};
+const $=id=>document.getElementById(id);
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const L=["a","b","c","d"];
+
+function startExam(n){
+  hideAll();
+  const count=(n===50)?4:0;
+  let list=shuffle(POOL.slice()).slice(0,n-count).map(o=>({...o}));
+  if(n===50){const pos=Math.floor(Math.random()*(list.length+1));list.splice(pos,0,...PASSAGE.qs.map(o=>({...o,p:true})));}
+  S.items=list.map(raw=>{const opts=shuffle(raw.o.slice());return{q:raw.x,opts,correct:opts.indexOf(raw.o[raw.a]),user:null,p:!!raw.p}});
+  S.idx=0;S.total=n;S.mins=n;
+  $("exTitle").textContent=(n===50?"🎯 النسخة الكاملة — 50 سؤال":"⚡ النسخة القصيرة — 20 سؤال");
+  $("pal").innerHTML=S.items.map((_,i)=>`<button id="pb${i}" onclick="jump(${i})">${i+1}</button>`).join("");
+  $("quiz").classList.remove("hidden");
+  render();
+  clearInterval(S.timer);S.end=Date.now()+n*60000;tick();S.timer=setInterval(tick,500);
+}
+function tick(){
+  const left=S.end-Date.now();
+  if(left<=0){clearInterval(S.timer);finish(true);return}
+  const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
+  const t=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  const el=$("timer");el.textContent=t;el.classList.toggle("warn",left<60000);
+}
+function render(){
+  const it=S.items[S.idx];
+  let passage="";
+  if(it.p&&(S.idx===0||!S.items[S.idx-1].p))passage=`<div class="passage"><b>📖 Reading Passage:</b><br>${PASSAGE.text}</div>`;
+  $("qcard").innerHTML=`<div class="qnum">سؤال ${S.idx+1} من ${S.total}</div>${passage}<div class="qtext">${it.q}</div>
+  <div class="opts">${it.opts.map((o,k)=>`<div class="opt${it.user===k?" sel":""}" onclick="pick(${k})"><span class="L">${L[k]}.</span><span>${o}</span>${it.user===k?'<span class="mark">✔</span>':""}</div>`).join("")}</div>`;
+  $("prevBtn").disabled=S.idx===0;
+  $("nextBtn").style.visibility=S.idx===S.total-1?"hidden":"visible";
+  updateHud();
+}
+function pick(k){S.items[S.idx].user=k;render()}
+function move(d){S.idx=Math.min(S.total-1,Math.max(0,S.idx+d));render()}
+function jump(i){S.idx=i;render();window.scrollTo({top:0,behavior:"smooth"})}
+function updateHud(){
+  const done=S.items.filter(i=>i.user!==null).length;
+  $("progTxt").textContent=done+"/"+S.total;
+  $("pfill").style.width=(done/S.total*100)+"%";
+  S.items.forEach((it,i)=>{const b=$("pb"+i);b.className=(it.user!==null?"ans":"")+(i===S.idx?" cur":"")});
+}
+function tryFinish(){
+  const un=S.total-S.items.filter(i=>i.user!==null).length;
+  if(un>0&&!confirm(`⚠️ لديك ${un} سؤال بدون إجابة.\nهل تريد تسليم الاختبار الآن؟`))return;
+  finish(false);
+}
+function finish(auto){
+  clearInterval(S.timer);
+  const left=Math.max(0,S.end-Date.now());
+  const used=S.mins*60-Math.floor(left/1000);
+  const correct=S.items.filter(i=>i.user===i.correct).length;
+  const pct=Math.round(correct/S.total*100);
+  const msg=pct>=90?"ممتاز! 🎉 أنت جاهز للامتحان":pct>=80?"جيد جدًا 👏 استمر":pct>=70?"جيد 👍 راجع أخطاءك":pct>=50?"مقبول — تحتاج مراجعة أكثر":"تحتاج مذاكرة جدية 💪";
+  const col=pct>=70?"#22c55e":pct>=50?"#f59e0b":"#ef4444";
+  const um=Math.floor(used/60),us=used%60;
+  $("resTop").innerHTML=`
+   <h2>${auto?"⏰ انتهى الوقت — تم التسليم تلقائيًا":"✅ تم تسليم الاختبار"}</h2>
+   <div class="ring" style="background:${col}"><b>${pct}%</b><span>${correct} / ${S.total}</span></div>
+   <div class="rmsg">${msg}</div>
+   <div class="rstats">
+     <div class="stat"><b style="color:#16a34a">${correct}</b>صحيحة ✔</div>
+     <div class="stat"><b style="color:#dc2626">${S.items.filter(i=>i.user!==null&&i.user!==i.correct).length}</b>خاطئة ✘</div>
+     <div class="stat"><b style="color:#64748b">${S.total-S.items.filter(i=>i.user!==null).length}</b>بدون إجابة</div>
+     <div class="stat"><b>${um}:${String(us).padStart(2,"0")}</b>الوقت المستغرق</div>
+   </div>`;
+  $("review").innerHTML=S.items.map((it,i)=>`
+   <div style="border-top:1px solid #e2e8f0;padding:14px 0">
+     <div class="qnum">سؤال ${i+1}</div><div class="qtext">${it.q}</div>
+     <div class="opts">${it.opts.map((o,k)=>{
+       let cls="opt";let mk="";
+       if(k===it.correct){cls+=" ok";mk='<span class="mark" style="color:#16a34a">✔ الصحيحة</span>'}
+       if(it.user===k&&k!==it.correct){cls+=" bad";mk='<span class="mark" style="color:#dc2626">✘ إجابتك</span>'}
+       if(it.user===null&&k===it.correct)mk='<span class="mark" style="color:#16a34a">✔ الصحيحة</span>';
+       return `<div class="${cls}"><span class="L">${L[k]}.</span><span>${o}</span>${mk}</div>`}).join("")}
+     </div>
+   </div>`).join("");
+  $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+  $("retryBtn").onclick=()=>startExam(S.total);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function goHome(){clearInterval(S.timer);hideAll();$("home").classList.remove("hidden")}
+function hideAll(){["home","quiz","result"].forEach(id=>$(id).classList.add("hidden"))}
+</script>
+</body>
+</html>
